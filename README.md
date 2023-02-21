@@ -96,3 +96,25 @@ mount /dev/datavg/datavolume /home
 df -h
 ```
 - Truy cập linode và resize volume mở rộng
+
+### Delete vg,lv,pv
+```
+umount -v /dev/mapper/datavg-datavolume
+lvremove /dev/mapper/datavg-datavolume
+vgchange -an datavg
+vgremove datavg
+pvremove /dev/sdd /dev/sdc
+lsblk
+```
+Fast add lvm
+```
+pvcreate /dev/sdc /dev/sdd
+vgcreate datavg /dev/sdc /dev/sdd
+lvcreate -l 100%FREE -n datavolume datavg
+lvs
+mkfs.ext4 /dev/datavg/datavolume
+mount /dev/datavg/datavolume /home
+vim /etc/fstab
+/dev/datavg/datavolume /home    ext4  defaults  0 0
+:wq
+```
