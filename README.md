@@ -24,6 +24,7 @@ vgcreate datavg /dev/sdc /dev/sdd
 pvs -o+pv_used
 vgreduce datavg --removemissing --test
 vgreduce datavg --removemissing
+vgreduce --removemissing datavg --force
 ```
 #### Khởi tạo lại Volume Group sau sửa lỗi
 ```
