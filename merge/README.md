@@ -26,6 +26,7 @@ driver.login()
 
 # Đọc dữ liệu từ file CSV
 with open('path/to/your/csv/file.csv', newline='') as csvfile:
+# bỏ qua dòng đầu tiền skip =1
     reader = csv.DictReader(csvfile, skiprows=1)
     for row in reader:
         # Kiểm tra nếu user đã tồn tại trong Mattermost thì update thông tin
