@@ -26,7 +26,7 @@ driver.login()
 
 # Đọc dữ liệu từ file CSV
 with open('path/to/your/csv/file.csv', newline='') as csvfile:
-    reader = csv.DictReader(csvfile)
+    reader = csv.DictReader(csvfile, skiprows=1)
     for row in reader:
         # Kiểm tra nếu user đã tồn tại trong Mattermost thì update thông tin
         if 'username' in row and row['username']:
