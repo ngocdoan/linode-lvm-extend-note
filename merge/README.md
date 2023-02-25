@@ -120,7 +120,7 @@ for user in users:
             user['channels'].append(channel['name'])
 
 # Tạo tệp CSV và ghi thông tin người dùng vào tệp
-with open('path/to/output/file.csv', 'w', newline='') as csvfile:
+with open('path/to/output/file.csv', 'w', newline='', encoding='utf-8') as csvfile:
     writer = csv.writer(csvfile)
     # Ghi tiêu đề của các cột vào tệp CSV
     writer.writerow(['Username', 'Email', 'First Name', 'Last Name', 'Nickname', 'Teams', 'Channels'])
