@@ -69,3 +69,66 @@ with open('path/to/your/csv/file.csv', newline='') as csvfile:
 driver.logout()
 
 ```
+### Để lấy thông tin người dùng đang ở trong các team và channel của Mattermost, bạn cần thực hiện các bước sau:
+
+- Sử dụng Mattermost API để lấy thông tin tất cả các team và channel trong Mattermost.
+- Sử dụng Mattermost API để lấy danh sách các team và channel mà mỗi người dùng đang tham gia.
+- Sử dụng thư viện Python để ghi thông tin này vào một tệp CSV.
+- Dưới đây là một ví dụ về cách thực hiện các bước này bằng Python và thư viện MattermostDriver:
+```
+import csv
+from mattermostdriver import Driver
+
+# Khởi tạo driver
+driver = Driver({
+    'url': 'https://your-mattermost-url.com',
+    'login_id': 'your-username',
+    'password': 'your-password',
+    'scheme': 'https',
+    'port': 443,
+    'verify': True,
+    'timeout': 30
+})
+
+# Đăng nhập vào Mattermost
+driver.login()
+
+# Lấy thông tin tất cả các team trong Mattermost
+teams = driver.teams.get_teams()
+
+# Lấy thông tin tất cả các channel trong Mattermost
+channels = driver.channels.get_channels()
+
+# Khởi tạo một dictionary để lưu trữ thông tin về team và channel
+team_channels = {}
+for team in teams:
+    team_channels[team['name']] = []
+
+for channel in channels:
+    team_channels[channel['team_name']].append(channel['name'])
+
+# Lấy thông tin người dùng và team/channel mà họ đang tham gia
+users = driver.users.get_users()
+for user in users:
+    user['teams'] = []
+    user['channels'] = []
+    memberships = driver.users.get_user_teams(user['id'])
+    for membership in memberships:
+        user['teams'].append(membership['name'])
+        channels = driver.channels.get_channels_for_team(membership['id'])
+        for channel in channels:
+            user['channels'].append(channel['name'])
+
+# Tạo tệp CSV và ghi thông tin người dùng vào tệp
+with open('path/to/output/file.csv', 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+    # Ghi tiêu đề của các cột vào tệp CSV
+    writer.writerow(['Username', 'Email', 'First Name', 'Last Name', 'Nickname', 'Teams', 'Channels'])
+    # Ghi thông tin của từng người dùng vào tệp CSV
+    for user in users:
+        writer.writerow([user['username'], user['email'], user['first_name'], user['last_name'], user['nickname'], ', '.join(user['teams']), ', '.join(user['channels'])])
+
+# Đăng xuất khỏi Mattermost
+driver.logout()
+
+```
